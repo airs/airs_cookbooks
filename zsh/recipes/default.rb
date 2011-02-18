@@ -26,7 +26,7 @@ template rcfile do
 end
 
 file rcfile do
-  owner node[:user]
+  owner node[:current_user]
   group node[:group]
   mode "0644"
 end
