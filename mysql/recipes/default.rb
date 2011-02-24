@@ -48,14 +48,14 @@ bash "set-root-password" do
   sql = <<EOS
 SET PASSWORD FOR root@'#{node.hostname}.local'=password('#{password}');
 SET PASSWORD FOR root@'127.0.0.1'=password('#{password}');
-DELETE FROM mysql.user WHERE user = '';
 EOS
   code "#{node.mysql.mysql_admin} -u root password '#{password}'"
   code %|#{node.mysql.mysql} -u root -p"#{password}" -e"#{sql}"|
 end
 
-bash "stop-mysql" do
-  code "#{node.mysql.service} stop"    
+bash "delete-anonymous-user" do
+  sql = "DELETE FROM mysql.user WHERE user = '';"
+  code %|#{node.mysql.mysql} -u root -p"#{node.mysql.root_password}" -e"#{sql}"|
 end
 
 bash "setup-auto-startup" do
