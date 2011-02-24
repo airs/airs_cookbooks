@@ -49,8 +49,9 @@ bash "set-root-password" do
 SET PASSWORD FOR root@'#{node.hostname}.local'=password('#{password}');
 SET PASSWORD FOR root@'127.0.0.1'=password('#{password}');
 EOS
-  code "#{node.mysql.mysql_admin} -u root password '#{password}'"
-  code %|#{node.mysql.mysql} -u root -p"#{password}" -e"#{sql}"|
+  cmd1 = "#{node.mysql.mysql_admin} -u root password '#{password}'"
+  cmd2 = %|#{node.mysql.mysql} -u root -p"#{password}" -e"#{sql}"|
+  code "#{cmd1}; #{cmd2}"
 end
 
 bash "delete-anonymous-user" do
