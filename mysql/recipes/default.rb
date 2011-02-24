@@ -16,45 +16,49 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+  
+package "mysql5-server" do
+  action :install
+end
 
-my_cnf = { :mac_os_x => "/opt/local/etc/mysql5/my.cnf" }
-if node.platform == "mac_os_x" and not File.exist?(my_cnf[:mac_os_x])
+template node.mysql.my_cnf do
+  source "my.cnf.erb"
+  variables :socket => node.mysql.socket,
+            :my_cnf => node.mysql.my_cnf,
+            :install_dir => node.mysql.install_dir
+end
 
-  Chef::Log.info("Install MySQL on #{node.platform}")
-  
-  package "mysql5-server" do
-    action :install
-  end
-  
-  template my_cnf[:mac_os_x] do
-    source "mac_os_x-my.cnf.erb"
-  end
-  
-  file my_cnf[:mac_os_x] do
-    owner "root"
-    group "admin"
-    mode "0644"
-  end
-  
-  execute "setup-mysql" do
-    command "sudo -u mysql /opt/local/lib/mysql5/bin/mysql_install_db"
-  end
-  
-  execute "set-root-password" do
-    only_if { node.attribute?("mysql") and node.mysql.attribute?("root_password") }
-    command "/opt/local/share/mysql5/mysql/mysql.server start"
-    password = node.mysql.root_password
-    sql = <<EOS
+file node.mysql.my_cnf do
+  owner "root"
+  group "admin"
+  mode "0644"
+end
+
+bash "setup-mysql" do
+  code "sudo -u mysql /opt/local/lib/mysql5/bin/mysql_install_db"
+  only_if { node.platform == "mac_os_x" }
+end
+
+bash "startup-mysql" do
+  code "#{node.mysql.service} start"
+end
+
+bash "set-root-password" do
+  password = node.mysql.root_password
+  sql = <<EOS
 SET PASSWORD FOR root@'#{node.hostname}.local'=password('#{password}');
 SET PASSWORD FOR root@'127.0.0.1'=password('#{password}');
 DELETE FROM mysql.user WHERE user = '';
 EOS
-    command "/opt/local/lib/mysql5/bin/mysqladmin -u root password '#{password}'"
-    command %|/opt/local/bin/mysql5 -u root -p"#{password}" -e"#{sql}"|
-    command "/opt/local/share/mysql5/mysql/mysql.server stop"
-  end
-  
-  execute "setup-auto-startup" do
-    command "/bin/launchctl load -w /Library/LaunchDaemons/org.macports.mysql5.plist"
-  end
+  code "#{node.mysql.mysql_admin} -u root password '#{password}'"
+  code %|#{node.mysql.mysql} -u root -p"#{password}" -e"#{sql}"|
+end
+
+bash "stop-mysql" do
+  code "#{node.mysql.service} stop"    
+end
+
+bash "setup-auto-startup" do
+  code "/bin/launchctl load -w /Library/LaunchDaemons/org.macports.mysql5.plist"
+  only_if { node.platform == "mac_os_x" }
 end

@@ -1,0 +1,7 @@
+default[:mysql][:my_cnf] = "/opt/local/etc/mysql5/my.cnf"
+default[:mysql][:socket] = "/opt/local/var/run/mysql5/mysqld.sock"
+default[:mysql][:install_dir] = "/opt/local/var/db/mysql5"
+default[:mysql][:service] = "/opt/local/share/mysql5/mysql/mysql.server"
+default[:mysql][:mysql_admin] = "/opt/local/lib/mysql5/bin/mysqladmin"
+default[:mysql][:mysql] = "/opt/local/bin/mysql5"
+default[:mysql][:root_password] = "MYSQL_ROOT_PASSWORD"

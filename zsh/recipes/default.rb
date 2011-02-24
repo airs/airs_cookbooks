@@ -20,13 +20,12 @@ package "zsh" do
   action :install
 end
 
-rcfile = "#{node[:home]}/.zshrc"
+rcfile = "#{node.home}/.zshrc"
 template rcfile do
   source "zshrc.erb"
 end
 
 file rcfile do
-  owner node[:current_user]
-  group node[:group]
+  owner node.current_user
   mode "0644"
 end
