@@ -20,7 +20,7 @@ package "zsh" do
   action :install
 end
 
-rcfile = "#{node.home}/.zshrc"
+rcfile = "#{ENV['HOME']}/.zshrc"
 template rcfile do
   source "zshrc.erb"
 end

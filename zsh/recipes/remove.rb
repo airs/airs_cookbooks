@@ -3,5 +3,5 @@ package "zsh" do
 end
 
 bash "remove-zshrc" do
-  code "rm #{node.home}/.zshrc"
+  code "rm #{ENV['HOME']}/.zshrc"
 end
