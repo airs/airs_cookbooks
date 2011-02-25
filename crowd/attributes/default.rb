@@ -1,0 +1,8 @@
+default[:crowd][:name] = "atlassian-crowd-2.1.1"
+default[:crowd][:download_url] = "http://www.atlassian.com/software/crowd/downloads/binary/#{default[:crowd][:name]}.tar.gz"
+default[:crowd][:install] = "/usr/share/#{default[:crowd][:name]}"
+default[:crowd][:home] = "/var/crowd-home"
+default[:crowd][:properties] = "#{default[:crowd][:install]}/crowd-webapp/WEB-INF/classes/crowd-init.properties"
+default[:crowd][:mysql_db] = "crowd"
+default[:crowd][:mysql_user] = "crowd"
+default[:crowd][:mysql_password] = "CROWD_MYSQL_USER_PASSWORD"
