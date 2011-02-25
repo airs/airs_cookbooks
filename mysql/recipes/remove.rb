@@ -8,6 +8,11 @@ bash "uninstall-mysql" do
   only_if { node.platform == "mac_os_x" }
 end
 
-bash "remove-install-dir" do
-  code "rm -rf #{node.mysql.install_dir}"
+directory node.mysql.install_dir do
+  recursive true
+  action :delete
+end
+
+file node.crowd.home do
+  action :delete
 end
