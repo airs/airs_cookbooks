@@ -2,6 +2,7 @@
 # Cookbook Name:: crowd
 # Recipe:: default
 #
+require_recipe "mysql"
 
 directory node.crowd.home do
   recursive true

@@ -16,6 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+return if File.exist?(node.mysql.my_cnf)
   
 package "mysql5-server" do
   action :install
