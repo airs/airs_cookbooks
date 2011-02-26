@@ -17,12 +17,12 @@ end
 
 bash "untar-crowd" do
   code "(cd /tmp; tar zxvf crowd.tar.gz)"
-  not_if "test -f /tmp/#{node.crowd.name}"
+  not_if { File.exist?("/tmp/#{node.crowd.name}") || File.exist?(node.crowd.install) }
 end
 
 bash "install-crowd" do
   code "mv /tmp/#{node.crowd.name} #{node.crowd.install}"
-  not_if "test -f #{node.crowd.install}/start_crowd.sh"
+  not_if { File.exist?(node.crowd.install) }
 end
 
 template "#{node.crowd.properties}" do
