@@ -1,0 +1,8 @@
+default[:jira][:name] = "atlassian-jira-enterprise-4.2.4-b591-standalone"
+default[:jira][:download_url] = "http://www.atlassian.com/software/jira/downloads/binary/#{default[:jira][:name]}.tar.gz"
+default[:jira][:install] = "/usr/share/#{default[:jira][:name]}"
+default[:jira][:home] = "/var/jira-home"
+default[:jira][:properties] = "#{default[:jira][:install]}/atlassian-jira/WEB-INF/classes/jira-application.properties"
+default[:jira][:mysql_db] = "jira"
+default[:jira][:mysql_user] = "jira"
+default[:jira][:mysql_password] = "JIRA_MYSQL_USER_PASSWORD"
