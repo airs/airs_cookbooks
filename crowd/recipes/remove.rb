@@ -1,6 +1,6 @@
 bash "stop-crowd" do
   code "(cd #{node.crowd.install}; ./stop_crowd.sh)"
-  only_if "test -f #{node.crowd.install}"
+  only_if "test -f #{node.crowd.install}./stop_crowd.sh"
 end
 
 bash "delete-mysql-crowd-database-and-user" do
@@ -9,7 +9,7 @@ DELETE FROM mysql.user WHERE user = 'crowd';
 DROP DATABASE crowd;
 EOS
   code %(#{node.mysql.mysql} -u root -p"#{node.mysql.root_password}" -e"#{sql}")
-  only_if "test -f #{node.crowd.install}"
+  only_if { File.exist?("#{node.mysql.install_dir}/#{node.crowd.mysql_db}") }
 end
 
 [node.crowd.home, node.crowd.install].each do |dir|

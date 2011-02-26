@@ -40,7 +40,7 @@ GRANT ALL PRIVILEGES ON #{node.crowd.mysql_db}.* TO #{node.crowd.mysql_user}@'%'
 IDENTIFIED BY '#{node.crowd.mysql_password}';
 EOS
   code %(#{node.mysql.mysql} -u root -p"#{node.mysql.root_password}" -e"#{sql}")
-  only_if "test -f #{node.crowd.install}/start_crowd.sh"
+  not_if { File.exist?("#{node.mysql.install_dir}/#{node.crowd.mysql_db}") }
 end
 
 remote_file "mysql-jdbc-driver" do
