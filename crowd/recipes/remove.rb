@@ -1,5 +1,6 @@
 bash "stop-crowd" do
   code "(cd #{node.crowd.install}; ./stop_crowd.sh)"
+  only_if "test -f #{node.crowd.install}"
 end
 
 bash "delete-mysql-crowd-database-and-user" do

@@ -13,6 +13,6 @@ directory node.mysql.install_dir do
   action :delete
 end
 
-file node.crowd.home do
+file node.mysql.my_cnf do
   action :delete
 end
