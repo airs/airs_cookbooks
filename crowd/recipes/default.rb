@@ -38,6 +38,7 @@ bash "create-mysql-crowd-database-and-user" do
 CREATE DATABASE #{node.crowd.mysql_db} CHARACTER SET utf8;
 GRANT ALL PRIVILEGES ON #{node.crowd.mysql_db}.* TO #{node.crowd.mysql_user}@'%'
 IDENTIFIED BY '#{node.crowd.mysql_password}';
+FLUSH PRIVILEGES;
 EOS
   code %(#{node.mysql.mysql} -u root -p"#{node.mysql.root_password}" -e"#{sql}")
   not_if { File.exist?("#{node.mysql.install_dir}/#{node.crowd.mysql_db}") }
