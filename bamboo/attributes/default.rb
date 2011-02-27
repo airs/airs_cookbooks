@@ -1,0 +1,8 @@
+default[:bamboo][:name] = "Bamboo"
+default[:bamboo][:download_url] = "http://www.atlassian.com/software/bamboo/downloads/binary/atlassian-bamboo-3.0.1-standalone.tgz"
+default[:bamboo][:install] = "/usr/share/bamboo-3.0.1"
+default[:bamboo][:properties] = "#{default[:bamboo][:install]}/webapp/WEB-INF/classes/bamboo-init.properties"
+default[:bamboo][:home] = "/var/bamboo-home"
+default[:bamboo][:mysql_db] = "bamboo"
+default[:bamboo][:mysql_user] = "bamboo"
+default[:bamboo][:mysql_password] = "BAMBOO_MYSQL_USER_PASSWORD"
