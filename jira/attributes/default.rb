@@ -3,6 +3,7 @@ default[:jira][:download_url] = "http://www.atlassian.com/software/jira/download
 default[:jira][:install] = "/usr/share/#{default[:jira][:name]}"
 default[:jira][:home] = "/var/jira-home"
 default[:jira][:properties] = "#{default[:jira][:install]}/atlassian-jira/WEB-INF/classes/jira-application.properties"
+default[:jira][:server_xml] = "#{default.jira.install}/conf/server.xml"
 default[:jira][:mysql_db] = "jira"
 default[:jira][:mysql_user] = "jira"
 default[:jira][:mysql_password] = "JIRA_MYSQL_USER_PASSWORD"

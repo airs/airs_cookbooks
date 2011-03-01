@@ -34,6 +34,14 @@ file "#{node.jira.properties}" do
   mode "0644"
 end
 
+template node.jira.server_xml do
+  source "server.xml.erb"
+end
+
+file node.jira.server_xml do
+  mode "0644"
+end
+
 bash "create-mysql-jira-database-and-user" do
   sql =<<EOS
 CREATE DATABASE #{node.jira.mysql_db} CHARACTER SET utf8;
