@@ -126,15 +126,12 @@
                      ====================================================================================
                     -->
                     <Resource name="jdbc/JiraDS" auth="Container" type="javax.sql.DataSource"
-
-                              driverClassName="org.hsqldb.jdbcDriver"
-                              url="jdbc:hsqldb:${catalina.home}/database/jiradb"
-                              username="sa"
-                              password=""
-
-                              minEvictableIdleTimeMillis="4000"
-                              timeBetweenEvictionRunsMillis="5000"
+                              username="<%= @username %>"
+                              password="<%= @password %>"
+                              driverClassName="com.mysql.jdbc.Driver"
+                              url="jdbc:mysql://localhost/<%= @db %>?useUnicode=true&amp;characterEncoding=UTF8"
                               maxActive="20"
+                              validationQuery="select 1"
                             />
 
                     <!--

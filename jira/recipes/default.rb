@@ -36,9 +36,20 @@ end
 
 template node.jira.server_xml do
   source "server.xml.erb"
+  variables :username => node.jira.mysql_user,
+            :password => node.jira.mysql_password,
+            :db => node.jira.mysql_db
 end
 
 file node.jira.server_xml do
+  mode "0644"
+end
+
+template node.jira.entityengine_xml do
+  source "entityengine.xml.erb"
+end
+
+file node.jira.entityengine_xml do
   mode "0644"
 end
 
