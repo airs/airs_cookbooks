@@ -9,5 +9,6 @@ bash "uninstall-apache2" do
 end
 
 directory node.apache2.base do
+  recursive true
   action :delete
 end
