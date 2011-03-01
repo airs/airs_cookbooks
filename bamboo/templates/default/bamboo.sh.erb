@@ -1,0 +1,181 @@
+#!/bin/bash
+#
+# ------------------------------------------------------
+# Bamboo Startup Script for Unix
+# ------------------------------------------------------
+
+#
+# Check correct command line usage
+#
+usage()
+{
+    echo "Usage: $0 {start|stop|restart|status}"
+    exit 1
+}
+
+[ $# -gt 0 ] || usage
+
+#
+# Get the action & configs
+#
+ACTION=$1
+
+#
+# Ensure the BAMBOO_INSTALL var for this script points to the
+# home directory where Bamboo is is installed on your system.
+#
+
+BAMBOO_INSTALL=$(dirname $0)
+
+export JAVA_HOME
+export BAMBOO_INSTALL
+
+#
+# Find a PID for the pid file
+#
+BAMBOO_PID=${BAMBOO_PID:-$BAMBOO_INSTALL/bamboo.pid}
+
+#
+# Find a location for the bamboo console
+#
+if [ -z "$BAMBOO_CONSOLE" ]
+then
+	if [ -w /dev/console ]
+	then
+		BAMBOO_CONSOLE=/dev/console
+	else
+		BAMBOO_CONSOLE=/dev/tty
+	fi
+fi
+
+#
+# Are we running on Windows? Could be, with Cygwin/NT.
+#
+case "`uname`" in
+CYGWIN*) PATH_SEPARATOR=";";;
+*) PATH_SEPARATOR=":";;
+esac
+
+#
+# Save the current CLASSPATH
+#
+OLDCLASSPATH=$CLASSPATH
+
+#
+# Put the javac compiler in the classpath;
+#
+#CLASSPATH=$JAVA_HOME/lib/tools.jar
+
+#
+# Add the bamboo classes in the classpath
+#
+CLASSPATH=webapp/WEB-INF/classes/
+
+#
+# Now add in the bamboo library jars
+#
+# activation.jar is needed only for Java 5
+for BAMBOO_CP in 'commons-lang-*.jar' 'servlet-api-2.5*.jar' 'jetty-*.jar' 'mail-*.jar' 'jsp-api-*.jar' 'activation-*.jar'
+do
+    CLASSPATH=${CLASSPATH}${PATH_SEPARATOR}$(ls $BAMBOO_INSTALL/webapp/WEB-INF/lib/$BAMBOO_CP | sed -e "s#^$BAMBOO_INSTALL/##g" | paste -s -d"$PATH_SEPARATOR" - )
+done
+
+
+#
+# Append old classpath to current classpath
+#
+if [ -n "$OLDCLASSPATH" ]; then
+    CLASSPATH=${CLASSPATH}${PATH_SEPARATOR}${OLDCLASSPATH}
+fi
+
+#
+# This is how the Bamboo server will be started
+#
+RUN_CMD="java -server -Xms256m -Xmx512m -XX:MaxPermSize=256m -Djava.awt.headless=true -classpath $CLASSPATH -Dorg.eclipse.jetty.xml.XmlParser.Validating=false -Djetty.port=8085 com.atlassian.bamboo.server.Server 8085 webapp /bamboo"
+
+#
+# Do the action
+#
+case "$ACTION" in
+  start)
+        echo "Starting Bamboo: "
+
+        if [ -f $BAMBOO_PID ]
+        then
+			PID=`cat $BAMBOO_PID 2>/dev/null`
+			if ps $PID >/dev/null
+			then
+	            echo "Already Running!!"
+    	        exit 1
+			fi
+			echo "Bamboo with pid=${PID} is not running - removing old pidfile"
+			rm -f $BAMBOO_PID
+        fi
+
+        echo "STARTED Bamboo `date`" >> $BAMBOO_CONSOLE
+
+        nohup sh -c "cd $BAMBOO_INSTALL && exec $RUN_CMD 2>&1" >$BAMBOO_INSTALL/logs/bamboo.log &
+        umask 022
+        echo $! > $BAMBOO_PID
+        echo "Bamboo running pid="`cat $BAMBOO_PID`
+        ;;
+
+  console)
+        echo "Starting Bamboo: "
+
+        if [ -f $BAMBOO_PID ]
+        then
+			PID=`cat $BAMBOO_PID 2>/dev/null`
+			if ps $PID >/dev/null
+			then
+	            echo "Already Running!!"
+    	        exit 1
+			fi
+			echo "Bamboo with pid=${PID} is not running - removing old pidfile"
+			rm -f $BAMBOO_PID
+        fi
+
+        echo "STARTED Bamboo `date`" >> $BAMBOO_CONSOLE
+
+        eval "cd $BAMBOO_INSTALL && $RUN_CMD"
+        ;;
+  
+  stop)
+        PID=`cat $BAMBOO_PID 2>/dev/null`
+        if [ -n "$PID" ] && ps $PID >/dev/null
+        then
+            echo "Shutting down Bamboo: $PID"
+            kill $PID 2>/dev/null
+            sleep 2
+            kill -9 $PID 2>/dev/null
+            echo "STOPPED `date`" >>$BAMBOO_CONSOLE
+        else
+            echo "Bamboo is currently not running."
+        fi
+        rm -f $BAMBOO_PID
+        ;;
+
+  restart)
+        $0 stop $*
+        sleep 5
+        $0 start $*
+        ;;
+
+  status)
+        PID=`cat $BAMBOO_PID 2>/dev/null`
+        if [ -f $BAMBOO_PID ] && ps $PID >/dev/null
+        then
+            echo "Bamboo running pid="`cat $BAMBOO_PID`
+            exit 0
+        else
+            echo "Bamboo is currently not running."
+        fi
+        exit 1
+        ;;
+
+*)
+        usage
+        ;;
+esac
+
+exit 0

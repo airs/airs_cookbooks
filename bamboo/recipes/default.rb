@@ -33,6 +33,14 @@ file "#{node.bamboo.properties}" do
   mode "0644"
 end
 
+template "#{node.bamboo.run_script}" do
+  source "bamboo.sh.erb"
+end
+
+file "#{node.bamboo.run_script}" do
+  mode "0755"
+end
+
 bash "create-mysql-bamboo-database-and-user" do
   sql =<<EOS
 CREATE DATABASE #{node.bamboo.mysql_db} CHARACTER SET utf8;
