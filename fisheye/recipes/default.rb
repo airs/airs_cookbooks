@@ -2,6 +2,7 @@
 # Cookbook Name:: fisheye
 # Recipe:: default
 #
+require 'rexml/document'
 
 remote_file "fisheye" do
   path "/tmp/fisheye.zip"
@@ -25,6 +26,20 @@ end
 
 file "#{node.fisheye.fisheyectl}" do
   mode "0755"
+end
+
+ruby_block "set-server-context" do
+  block do
+    if File.exist?(node.fisheye.config)
+      doc = REXML::Document.new(open(node.fisheye.config).read)
+      if doc.elements['/config/web-server'].attributes["context"] != "fisheye"
+        doc.elements['/config/web-server'].attributes["context"] = "fisheye"
+        File.open(node.fisheye.config, 'w') do |f|
+          f.puts(doc.to_s)
+        end
+      end
+    end
+  end
 end
 
 bash "start-fisheye" do
