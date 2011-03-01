@@ -1,0 +1,4 @@
+<%- @mapping.each do |path, url| -%>
+ProxyPass <%= path %> <%= url %>
+ProxyPassReverse <%= path %> <%= url %>
+<%- end -%>
