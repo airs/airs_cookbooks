@@ -46,4 +46,5 @@ end
 
 bash "start-bamboo" do
   code "(cd #{node.bamboo.install}; ./bamboo.sh start)"
+  not_if "test -f #{node.bamboo.install}/bamboo.pid"
 end
