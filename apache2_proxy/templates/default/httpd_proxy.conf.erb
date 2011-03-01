@@ -1,3 +1,6 @@
+ProxyRequests     Off
+ProxyPreserveHost On
+
 <%- @mapping.each do |path, url| -%>
 ProxyPass <%= path %> <%= url %>
 ProxyPassReverse <%= path %> <%= url %>
