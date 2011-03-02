@@ -1,0 +1,49 @@
+#
+#  Occasionally Atlassian Support may recommend that you set some specific JVM arguments.  You can use this variable below to do that.
+#
+JVM_SUPPORT_RECOMMENDED_ARGS=""
+
+#
+# The following 2 settings control the minimum and maximum given to the JIRA Java virtual machine.  In larger JIRA instances, the maximum amount will need to be increased.
+#
+JVM_MINIMUM_MEMORY="512m"
+JVM_MAXIMUM_MEMORY="640m"
+
+#
+# The following are the required arguments need for JIRA standalone.
+#
+JVM_REQUIRED_ARGS="-Djava.awt.headless=true -Datlassian.standalone=JIRA -Dorg.apache.jasper.runtime.BodyContentImpl.LIMIT_BUFFER=true -Dmail.mime.decodeparameters=true"
+
+# Uncomment this setting if you want to import data without notifications
+#
+#DISABLE_NOTIFICATIONS=" -Datlassian.mail.senddisabled=true -Datlassian.mail.fetchdisabled=true -Datlassian.mail.popdisabled=true"
+
+
+#-----------------------------------------------------------------------------------
+#
+# In general don't make changes below here
+#
+#-----------------------------------------------------------------------------------
+JAVA_OPTS="-Xms${JVM_MINIMUM_MEMORY} -Xmx${JVM_MAXIMUM_MEMORY} ${JAVA_OPTS} ${JVM_REQUIRED_ARGS} ${DISABLE_NOTIFICATIONS} ${JVM_SUPPORT_RECOMMENDED_ARGS}"
+
+PRGDIR=`dirname "$0"`
+
+cat "${PRGDIR}"/jirabanner.txt
+
+# Perm Gen size needs to be increased if encountering OutOfMemoryError: PermGen problems. Specifying PermGen size is not valid on IBM JDKs
+JIRA_MAX_PERM_SIZE=256m
+if [ -f "${PRGDIR}/permgen.sh" ]; then
+    echo "Detecting JVM PermGen support..."
+    . "${PRGDIR}/permgen.sh"
+    if [ $JAVA_PERMGEN_SUPPORTED = "true" ]; then
+        echo "PermGen switch is supported. Setting to ${JIRA_MAX_PERM_SIZE}"
+        JAVA_OPTS="-XX:MaxPermSize=${JIRA_MAX_PERM_SIZE} ${JAVA_OPTS}"
+    else
+        echo "PermGen switch is NOT supported and will NOT be set automatically."
+    fi
+fi
+
+export JAVA_OPTS
+
+echo "If you encounter issues starting or stopping JIRA Standalone Edition, please see the Troubleshooting guide at http://confluence.atlassian.com/display/JIRA/Installation+Troubleshooting+Guide"
+echo ""
