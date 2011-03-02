@@ -24,8 +24,7 @@ bash "replace-ehcache-xml" do
 end
 
 crowd_properties = "#{node.jira.install}/#{node.crowd_jira.properties}"
-template "crowd-properties" do
-  path = crowd_properties
+template crowd_properties do
   source "crowd.properties.erb"
   variables :name => "jira",
             :password => node.crowd_jira.password
@@ -36,8 +35,7 @@ file crowd_properties do
 end
 
 osuser_xml = "#{node.jira.install}/#{node.crowd_jira.osuser_xml}"
-template "osuser-xml" do
-  path = osuser_xml
+template osuser_xml do
   source "osuser.xml.erb"
 end
 
@@ -46,8 +44,7 @@ file osuser_xml do
 end
 
 seraph_config_xml = "#{node.jira.install}/#{node.crowd_jira.seraph_config_xml}"
-template "seraph-config-xml" do
-  path = seraph_config_xml
+template seraph_config_xml do
   source "seraph-config.xml.erb"
 end
 
