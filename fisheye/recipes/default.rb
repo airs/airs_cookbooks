@@ -45,7 +45,7 @@ end
 
 bash "create-mysql-fisheye-database-and-user" do
   sql =<<EOS
-CREATE DATABASE #{node.fisheye.mysql_db} CHARACTER SET utf8;
+CREATE DATABASE #{node.fisheye.mysql_db} CHARACTER SET utf8 COLLATE utf8_bin;
 GRANT ALL PRIVILEGES ON #{node.fisheye.mysql_db}.* TO #{node.fisheye.mysql_user}@'%'
 IDENTIFIED BY '#{node.fisheye.mysql_password}';
 FLUSH PRIVILEGES;
