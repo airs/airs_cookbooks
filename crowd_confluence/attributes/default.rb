@@ -1,0 +1,6 @@
+default[:crowd_confluence][:client_jar] = "/confluence/WEB-INF/lib/crowd-integration-client-2.1.1.jar"
+default[:crowd_confluence][:properties] = "/confluence/WEB-INF/classes/crowd.properties"
+default[:crowd_confluence][:ehcache_xml] = "/confluence/WEB-INF/classes/crowd-ehcache.xml"
+default[:crowd_confluence][:password] = "CROWD_CONFLUENCE_APP_PASSWORD"
+default[:crowd_confluence][:atlassian_user_xml] = "/confluence/WEB-INF/classes/atlassian-user.xml"
+default[:crowd_confluence][:seraph_config_xml] = "/confluence/WEB-INF/classes/seraph-config.xml"
