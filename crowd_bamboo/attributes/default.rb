@@ -1,0 +1,6 @@
+default[:crowd_bamboo][:client_jar] = "/webapp/WEB-INF/lib/crowd-integration-client-2.1.1.jar"
+default[:crowd_bamboo][:properties] = "/webapp/WEB-INF/classes/crowd.properties"
+default[:crowd_bamboo][:ehcache_xml] = "/webapp/WEB-INF/classes/crowd-ehcache.xml"
+default[:crowd_bamboo][:password] = "CROWD_BAMBOO_APP_PASSWORD"
+default[:crowd_bamboo][:atlassian_user_xml] = "/webapp/WEB-INF/classes/atlassian-user.xml"
+default[:crowd_bamboo][:seraph_config_xml] = "/webapp/WEB-INF/classes/seraph-config.xml"
