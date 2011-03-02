@@ -3,6 +3,7 @@
 # Recipe:: default
 #
 require 'rexml/document'
+require_recipe 'mysql'
 
 remote_file "fisheye" do
   path "/tmp/fisheye.zip"
@@ -40,6 +41,17 @@ ruby_block "set-server-context" do
       end
     end
   end
+end
+
+bash "create-mysql-fisheye-database-and-user" do
+  sql =<<EOS
+CREATE DATABASE #{node.fisheye.mysql_db} CHARACTER SET utf8;
+GRANT ALL PRIVILEGES ON #{node.fisheye.mysql_db}.* TO #{node.fisheye.mysql_user}@'%'
+IDENTIFIED BY '#{node.fisheye.mysql_password}';
+FLUSH PRIVILEGES;
+EOS
+  code %(#{node.mysql.mysql} -u root -p"#{node.mysql.root_password}" -e"#{sql}")
+  not_if { File.exist?("#{node.mysql.install_dir}/#{node.fisheye.mysql_db}") }
 end
 
 bash "start-fisheye" do

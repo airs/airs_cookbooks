@@ -3,6 +3,15 @@ bash "stop-fisheye" do
   only_if { File.exist?(node.fisheye.install) }
 end
 
+bash "delete-mysql-fisheye-database-and-user" do
+  sql =<<EOS
+DELETE FROM mysql.user WHERE user = '#{node.fisheye.mysql_user}';
+DROP DATABASE #{node.fisheye.mysql_db};
+EOS
+  code %(#{node.mysql.mysql} -u root -p"#{node.mysql.root_password}" -e"#{sql}")
+  only_if { File.exist?("#{node.mysql.install_dir}/#{node.fisheye.mysql_db}") }
+end
+
 directory node.fisheye.install do
   recursive true
   action :delete
