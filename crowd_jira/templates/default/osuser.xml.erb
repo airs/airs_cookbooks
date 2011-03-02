@@ -1,0 +1,36 @@
+<!-- This is where JIRA's credentials checking can be configured.  For instance, see
+http://www.atlassian.com/software/jira/docs/latest/ldap.html -->
+<opensymphony-user>
+
+	<authenticator class="com.opensymphony.user.authenticator.SmartAuthenticator" />
+
+<!-- CROWD:START
+    You will need to uncomment the Crowd providers below to enable Crowd integration
+    and comment out the default providers that are located further down in this file.
+-->
+    <provider class="com.atlassian.crowd.integration.osuser.CrowdCredentialsProvider"/>
+    <provider class="com.atlassian.crowd.integration.osuser.CrowdAccessProvider"/>
+    <provider class="com.atlassian.crowd.integration.osuser.DelegatingProfileProvider">
+        <property name="provider-1">com.atlassian.crowd.integration.osuser.CrowdProfileProvider</property>
+        <property name="provider-2">com.atlassian.jira.user.ExternalEntityJiraProfileProvider</property>
+        <property name="provider-2-exclusive-access">true</property>
+    </provider>
+<!-- CROWD:END -->
+
+<!-- CROWD:START  - The providers below here will need to be commented out for Crowd integration -->
+<!--
+  <provider class="com.atlassian.jira.user.osuser.JiraOFBizCredentialsProvider">
+    <property name="exclusive-access">true</property>
+  </provider>
+
+    <provider class="com.atlassian.jira.user.osuser.JiraOFBizProfileProvider">
+    <property name="exclusive-access">true</property>
+  </provider>
+
+  <provider class="com.atlassian.jira.user.osuser.JiraOFBizAccessProvider">
+    <property name="exclusive-access">true</property>
+  </provider>
+-->
+<!-- CROWD:END -->
+
+</opensymphony-user>

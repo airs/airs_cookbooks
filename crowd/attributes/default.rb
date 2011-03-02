@@ -6,3 +6,5 @@ default[:crowd][:properties] = "#{default[:crowd][:install]}/crowd-webapp/WEB-IN
 default[:crowd][:mysql_db] = "crowd"
 default[:crowd][:mysql_user] = "crowd"
 default[:crowd][:mysql_password] = "CROWD_MYSQL_USER_PASSWORD"
+default[:crowd][:client_jar] = "#{default[:crowd][:install]}/client/crowd-integration-client-2.1.1.jar"
+default[:crowd][:ehcache_xml] = "#{default[:crowd][:install]}client/conf/crowd-ehcache.xml"

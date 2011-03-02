@@ -1,0 +1,6 @@
+default[:crowd_jira][:client_jar] = "/atlassian-jira/WEB-INF/lib/crowd-integration-client-2.1.1.jar"
+default[:crowd_jira][:ehcache_xml] = "/atlassian-jira/WEB-INF/classes/crowd-ehcache.xml"
+default[:crowd_jira][:properties] = "/atlassian-jira/WEB-INF/classes/crowd.properties"
+default[:crowd_jira][:password] = "CROWD_JIRA_APP_PASSWORD"
+default[:crowd_jira][:osuser_xml] = "/atlassian-jira/WEB-INF/classes/osuser.xml"
+default[:crowd_jira][:seraph_config_xml] = "/atlassian-jira/WEB-INF/classes/seraph-config.xml"
